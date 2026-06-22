@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f8fafc; padding: 15px; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        input { padding: 8px; border-radius: 5px; border: none; width: 80px; text-transform: uppercase; }
+        button { padding: 8px 15px; border-radius: 5px; border: none; background: #38bdf8; color: #0f172a; font-weight: bold; cursor: pointer; }
+        #metar-box { background: #1e293b; padding: 15px; border-radius: 10px; min-height: 50px; border: 1px solid #334155; }
+    </style>
+</head>
+<body>
+    <div class="input-group">
+        <input type="text" id="icao-input" placeholder="ICAO" maxlength="4">
+        <button onclick="updateMetar()">Buscar</button>
+    </div>
+    <div id="metar-box">Ingresa un ICAO (ej. SKBO)</div>
+
+    <script>
+        const token = 'TU_TOKEN_AQUI'; // PEGA AQUÍ TU TOKEN DE AVWX
+        
+        async function updateMetar() {
+            const icao = document.getElementById('icao-input').value.toUpperCase();
+            const box = document.getElementById('metar-box');
+            
+            if (icao.length < 4) { box.innerText = "Por favor ingresa un ICAO válido."; return; }
+            
+            box.innerText = "Consultando...";
+            
+            try {
+                const response = await fetch(`https://avwx.rest/api/metar/${icao}?token=${token}`);
+                const data = await response.json();
+                box.innerText = data.raw || "No se encontró el METAR para este aeropuerto.";
+            } catch (error) {
+                box.innerText = "Error al conectar con el servidor.";
+            }
+        }
+    </script>
+</body>
+</html>
