@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7e6ec">
+  <title>Para Isabella</title>
+  <meta name="description" content="Hay algo especial esperándote.">
+
+  <!-- Vista previa al compartir el enlace por WhatsApp (la imagen necesita la URL completa) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Isabella, hay algo especial esperándote">
+  <meta property="og:description" content="Un regalo de Cristian. Ábrelo con calma.">
+  <meta property="og:image" content="https://kkannon04-cyber.github.io/metars/img/preview.jpg">
+  <meta property="og:url" content="https://kkannon04-cyber.github.io/metars/">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23d9a0b4' d='M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0Z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Símbolos SVG reutilizables -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="star" viewBox="0 0 24 24">
+        <path d="M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0Z" fill="currentColor"/>
+      </symbol>
+      <symbol id="sprig" viewBox="0 0 140 140">
+        <g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
+          <path d="M4 136C22 112 34 84 52 62S98 20 134 6"/>
+          <path d="M52 62C44 48 44 34 50 22"/>
+          <path d="M84 34C82 22 86 12 94 4"/>
+        </g>
+        <g fill="currentColor" opacity=".55">
+          <path d="M0 0C6-8 16-8 22 0 16 8 6 8 0 0Z" transform="translate(20 108) rotate(-58)"/>
+          <path d="M0 0C6-8 16-8 22 0 16 8 6 8 0 0Z" transform="translate(30 98) rotate(12)"/>
+          <path d="M0 0C6-8 16-8 22 0 16 8 6 8 0 0Z" transform="translate(40 80) rotate(-70)"/>
+          <path d="M0 0C6-8 16-8 22 0 16 8 6 8 0 0Z" transform="translate(64 52) rotate(-8)"/>
+          <path d="M0 0C6-8 16-8 22 0 16 8 6 8 0 0Z" transform="translate(104 22) rotate(-40)"/>
+          <path d="M0 0C5-6 12-6 16 0 12 6 5 6 0 0Z" transform="translate(48 30) rotate(-100)"/>
+        </g>
+        <g fill="currentColor">
+          <g transform="translate(50 20)" opacity=".8">
+            <ellipse rx="3.2" ry="6" transform="translate(0 -5)"/>
+            <ellipse rx="3.2" ry="6" transform="rotate(72) translate(0 -5)"/>
+            <ellipse rx="3.2" ry="6" transform="rotate(144) translate(0 -5)"/>
+            <ellipse rx="3.2" ry="6" transform="rotate(216) translate(0 -5)"/>
+            <ellipse rx="3.2" ry="6" transform="rotate(288) translate(0 -5)"/>
+          </g>
+          <circle cx="50" cy="20" r="2.4" fill="#f6e9d8"/>
+          <circle cx="95" cy="4" r="2.6" opacity=".7"/>
+          <circle cx="134" cy="6" r="2" opacity=".6"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- Fondo -->
+  <div class="ambient" aria-hidden="true">
+    <span class="blob blob--1"></span>
+    <span class="blob blob--2"></span>
+    <span class="blob blob--3"></span>
+  </div>
+  <canvas id="dust" class="layer-canvas" aria-hidden="true"></canvas>
+  <canvas id="fx" class="layer-canvas layer-canvas--top" aria-hidden="true"></canvas>
+  <div class="veil" id="veil" aria-hidden="true"></div>
+
+  <!-- Música (audio/musica.mp3). El botón solo aparece si el archivo existe. -->
+  <audio id="music" src="audio/musica.mp3" loop preload="none"></audio>
+  <button class="music" id="musicToggle" type="button" aria-label="Pausar música" aria-pressed="true" hidden>
+    <span class="music__bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <svg class="music__note" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 17.5a2.5 2.5 0 1 1-2-2.45V5.2l11-2.2v11.5a2.5 2.5 0 1 1-2-2.45V7.3l-7 1.4v8.8Z"/></svg>
+  </button>
+
+  <main>
+
+    <!-- 1 · PANTALLA INICIAL + REGALO -->
+    <section class="scene scene--intro is-active" id="intro" aria-label="Inicio">
+      <div class="intro__text">
+        <p class="intro__name reveal" data-text="intro.nombre"></p>
+        <p class="intro__line reveal" data-text="intro.linea1"></p>
+        <p class="intro__line intro__line--soft reveal" data-text="intro.linea2"></p>
+      </div>
+
+      <div class="gift-stage reveal" id="giftStage">
+        <div class="gift-float">
+          <button class="gift" id="gift" type="button" aria-label="Abrir regalo">
+            <span class="gift__rays" aria-hidden="true"></span>
+            <span class="gift__shadow" aria-hidden="true"></span>
+            <span class="gift__box" aria-hidden="true"><span class="gift__shine"></span></span>
+            <span class="gift__glow" aria-hidden="true"></span>
+            <span class="gift__lid" aria-hidden="true">
+              <span class="gift__bow">
+                <i class="bow-tail bow-tail--l"></i><i class="bow-tail bow-tail--r"></i>
+                <i class="bow-loop bow-loop--l"></i><i class="bow-loop bow-loop--r"></i>
+                <i class="bow-knot"></i>
+              </span>
+            </span>
+          </button>
+          <svg class="twinkle t1" aria-hidden="true"><use href="#star"/></svg>
+          <svg class="twinkle t2" aria-hidden="true"><use href="#star"/></svg>
+          <svg class="twinkle t3" aria-hidden="true"><use href="#star"/></svg>
+          <svg class="twinkle t4" aria-hidden="true"><use href="#star"/></svg>
+          <svg class="twinkle t5" aria-hidden="true"><use href="#star"/></svg>
+        </div>
+      </div>
+
+      <div class="intro__cta reveal" id="introCta">
+        <p class="hint" data-text="intro.pista"></p>
+        <button class="btn" id="openGiftBtn" type="button" data-text="intro.boton"></button>
+      </div>
+    </section>
+
+    <!-- 2 · SOBRE -->
+    <section class="scene scene--envelope" id="envelope" aria-label="Sobre">
+      <p class="eyebrow reveal" data-text="sobre.pista"></p>
+
+      <button class="env" id="env" type="button" aria-label="Abrir carta">
+        <span class="env__back" aria-hidden="true"></span>
+        <span class="env__card" aria-hidden="true">
+          <span class="env__card-title" data-text="carta.titulo"></span>
+          <span class="env__card-line"></span><span class="env__card-line"></span><span class="env__card-line env__card-line--short"></span>
+        </span>
+        <span class="env__front" aria-hidden="true"></span>
+        <span class="env__flap" aria-hidden="true"></span>
+        <span class="env__seal" aria-hidden="true"><span data-text="sobre.inicialSello"></span></span>
+        <span class="env__to">
+          <span class="env__for" data-text="sobre.para"></span>
+          <span class="env__from" data-text="sobre.de"></span>
+        </span>
+      </button>
+
+      <button class="btn reveal" id="openEnvBtn" type="button" data-text="sobre.boton"></button>
+    </section>
+
+    <!-- 3 · CARTA -->
+    <section class="scene scene--letter scene--scroll" id="letter" aria-label="Carta">
+      <div class="scene__inner">
+        <article class="paper" id="paper">
+          <svg class="floral floral--tl" aria-hidden="true"><use href="#sprig"/></svg>
+          <svg class="floral floral--br" aria-hidden="true"><use href="#sprig"/></svg>
+
+          <header class="paper__head">
+            <h1 class="paper__title" data-text="carta.titulo"></h1>
+            <p class="paper__age" data-text="carta.subtitulo"></p>
+            <span class="ornament" aria-hidden="true"><i></i><svg><use href="#star"/></svg><i></i></span>
+          </header>
+
+          <div class="paper__body" id="letterBody"></div>
+
+          <footer class="paper__sign" id="letterSign">
+            <span class="paper__closing" data-text="carta.despedida"></span>
+            <span class="paper__name" data-text="carta.firma"></span>
+          </footer>
+        </article>
+
+        <p class="skip-hint" id="skipHint" data-text="carta.pistaSaltar"></p>
+        <button class="btn btn--ghost" id="letterNext" type="button" data-text="carta.botonSeguir"></button>
+      </div>
+    </section>
+
+    <!-- 4 · TRANSICIÓN -->
+    <section class="scene scene--interlude" id="interlude" aria-label="Transición">
+      <p class="interlude__line reveal" data-text="transicion.linea1"></p>
+      <p class="interlude__line interlude__line--big reveal" data-text="transicion.linea2"></p>
+    </section>
+
+    <!-- 5 · RECUERDOS -->
+    <section class="scene scene--memories scene--scroll" id="memories" aria-label="Recuerdos">
+      <div class="scene__inner memories">
+        <header class="memories__head">
+          <p class="eyebrow" data-text="recuerdos.etiqueta"></p>
+          <h2 class="memories__title" data-text="recuerdos.titulo"></h2>
+          <p class="memories__sub" data-text="recuerdos.subtitulo"></p>
+        </header>
+
+        <div class="polaroids" id="polaroids"></div>
+
+        <div class="discover" id="discover">
+          <p class="discover__text" id="discoverText"></p>
+          <button class="btn" id="discoverBtn" type="button"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · SORPRESA FINAL -->
+    <section class="scene scene--finale" id="finale" aria-label="Sorpresa final">
+      <div class="finale__prelude" id="prelude">
+        <p class="finale__name reveal" data-text="final.nombre"></p>
+        <p class="finale__line reveal" data-text="final.linea1"></p>
+        <p class="finale__line finale__line--soft reveal" data-text="final.linea2"></p>
+        <button class="btn btn--glow reveal" id="surpriseBtn" type="button" data-text="final.boton"></button>
+      </div>
+
+      <div class="finale__card" id="finaleCard" aria-live="polite">
+        <span class="finale__num" aria-hidden="true" data-text="final.numeroFondo"></span>
+        <h2 class="finale__title" data-text="final.titulo"></h2>
+        <p class="finale__msg" data-text="final.mensaje"></p>
+        <p class="finale__closing" data-text="final.despedida"></p>
+        <p class="finale__sign" data-text="final.firma"></p>
+        <button class="replay" id="replayBtn" type="button" data-text="final.repetir"></button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Visor de fotos -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada" hidden>
+    <button class="lightbox__close" id="lbClose" type="button" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+    <figure class="lightbox__figure">
+      <div class="lightbox__media" id="lbMedia"></div>
+      <figcaption class="lightbox__caption" id="lbCaption"></figcaption>
+      <p class="lightbox__note" id="lbNote"></p>
+    </figure>
+    <div class="lightbox__nav">
+      <button type="button" id="lbPrev" aria-label="Foto anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button type="button" id="lbNext" aria-label="Foto siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
